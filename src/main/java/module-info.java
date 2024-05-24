@@ -8,4 +8,7 @@ module org.example.schoolmanager {
 
     opens org.example.schoolmanager to javafx.fxml;
     exports org.example.schoolmanager;
+
+    opens org.example.schoolmanager.controllers to javafx.fxml;
+    exports org.example.schoolmanager.controllers;
 }

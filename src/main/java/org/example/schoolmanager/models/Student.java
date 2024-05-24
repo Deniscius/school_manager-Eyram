@@ -4,22 +4,31 @@ import org.example.schoolmanager.dbconfig.IDBConfig;
 import org.example.schoolmanager.interfaces.StudentInterface;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Student implements StudentInterface {
     private int id;
     private String firstname;
     private String lastname;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private String placeOfBirthday;
-    private int state;
+    private int state = 0;
+    private int classroom;
+
+    public void setClassroom(int classroom) {this.classroom = classroom;}
+
     private Connection connection;
 
     public int getId() {
         return id;
     }
+
+    public LocalDate getDateOfBirth() {return dateOfBirth;}
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {this.dateOfBirth = dateOfBirth;}
 
     public void setId(int id) {
         this.id = id;
@@ -41,13 +50,7 @@ public class Student implements StudentInterface {
         this.lastname = lastname;
     }
 
-    public java.sql.Date getDateOfBirth() {
-        return (java.sql.Date) dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
+    public int getClassroom() {return classroom;}
 
     public String getPlaceOfBirthday() {
         return placeOfBirthday;
@@ -78,23 +81,26 @@ public class Student implements StudentInterface {
     public void create(Student student) throws SQLException {
         connection = IDBConfig.getConnection();
         if (connection != null) {
-            String req = "(INSERT INTO student(firstname, lastname, dateOfBirth, placeOfBirth, ) VALUES (?, ?, ?, ?, ?)";
+            String req = "INSERT INTO student(firstname, lastname, dateOfBirth, placeOfBirth, state ) VALUES (?, ?, ?, ?, ?);";
 
             PreparedStatement preparedStatement =
                     this.connection.prepareStatement(req);
 
-            preparedStatement.setString(1, student.getFirstname());
-            preparedStatement.setString(2, student.getLastname());
-            preparedStatement.setDate(3, student.getDateOfBirth());
-            preparedStatement.setString(4, student.getPlaceOfBirthday());
-
-            int row = preparedStatement.executeUpdate();
+            preparedStatement.setString(1, getFirstname());
+            preparedStatement.setString(2, getLastname());
+            preparedStatement.setDate(3, Date.valueOf(getDateOfBirth()));
+            preparedStatement.setString(4, getPlaceOfBirthday());
+            preparedStatement.setInt(5, getState());
+            preparedStatement.executeUpdate();
 
             preparedStatement.close();
             this.connection.close();
 
 
         }
+    }
+    private void dateOfBirth() {
+
     }
 }
 
